@@ -5,7 +5,7 @@ import json
 class QuoteSpider(scrapy.Spider):
     name = "product"
     start_urls = [
-        "https://www.digikala.com/product/dkp-904246/%D9%84%D9%BE-%D8%AA%D8%A7%D9%BE-15-%D8%A7%DB%8C%D9%86%DA%86%DB%8C-%D9%84%D9%86%D9%88%D9%88-%D9%85%D8%AF%D9%84-ideapad-330-e"
+        "https://www.digikala.com/product/dkp-2264825/%D8%B3%D8%A7%D8%B9%D8%AA-%D9%87%D9%88%D8%B4%D9%85%D9%86%D8%AF-%D9%85%D9%88%D8%AF%DB%8C%D9%88-%D9%85%D8%AF%D9%84-mw01"
     ]
 
     def parse(self, response):
@@ -23,6 +23,11 @@ class QuoteSpider(scrapy.Spider):
         # Product warranty
         product_warranty = str(
             page.css("div.c-mini-buy-box__warranty::text").get()).strip()
+        # Product colors
+        product_colors = list()
+        for products_color in page.css("ul.js-product-variants li"):
+            color = str(products_color.css("::text").get()).strip()
+            product_colors.append(color)
         # Product general details
         product_general_details = list()
         # Product general information
@@ -60,6 +65,8 @@ class QuoteSpider(scrapy.Spider):
             'product_model': product_model,
             # Product warranty
             'product_warranty': product_warranty,
+            # Product colors
+            'product_colors': product_colors,
             # Product overview
             'product_overview': product_overview,
             # Product general specifications
