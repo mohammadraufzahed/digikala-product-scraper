@@ -5,7 +5,7 @@ import json
 class QuoteSpider(scrapy.Spider):
     name = "product"
     start_urls = [
-        "https://www.digikala.com/product/dkp-541775/%DA%AF%D9%88%D8%B4%DB%8C-%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-%D8%AF%D9%88%D8%B1%D9%88-%D9%85%D8%AF%D9%84-1360-%D8%AF%D9%88-%D8%B3%DB%8C%D9%85-%DA%A9%D8%A7%D8%B1%D8%AA"
+        "https://www.digikala.com/product/dkp-904246/%D9%84%D9%BE-%D8%AA%D8%A7%D9%BE-15-%D8%A7%DB%8C%D9%86%DA%86%DB%8C-%D9%84%D9%86%D9%88%D9%88-%D9%85%D8%AF%D9%84-ideapad-330-e"
     ]
 
     def parse(self, response):
@@ -19,7 +19,10 @@ class QuoteSpider(scrapy.Spider):
             page.css("span.c-product__title-en::text").get()).strip()
         # Product overview
         product_overview = str(page.css(
-            "section.c-content-expert__summary p::text").get()).strip()
+            "div.c-mask__text ::text").get()).strip()
+        # Product warranty
+        product_warranty = str(
+            page.css("div.c-mini-buy-box__warranty::text").get()).strip()
         # Product general details
         product_general_details = list()
         # Product general information
@@ -53,10 +56,14 @@ class QuoteSpider(scrapy.Spider):
         product = {
             # Product title
             'product_title': product_title,
+            # Product model
             'product_model': product_model,
+            # Product warranty
+            'product_warranty': product_warranty,
             # Product overview
             'product_overview': product_overview,
             # Product general specifications
             'product_general_specifications': product_general_details,
+            # Product all specifications
             'product_details_box': product_details_data}
         yield product
