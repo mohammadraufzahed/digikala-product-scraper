@@ -19,7 +19,7 @@ class QuoteSpider(scrapy.Spider):
             page.css("span.c-product__title-en::text").get()).strip()
         # Product overview
         product_overview = str(page.css(
-            "section.c-content-expert__summary .c-mask__text::text").get()).strip()
+            "section.c-content-expert__summary p::text").get()).strip()
         # Product general details
         product_general_details = list()
         # Product general information
