@@ -9,6 +9,8 @@ class QuoteSpider(scrapy.Spider):
     ]
 
     def parse(self, response):
+        # Product url
+        product_url = response.request.url
         # Select the hole page
         page = response.css("div.container")
         # Product title
@@ -61,6 +63,8 @@ class QuoteSpider(scrapy.Spider):
         product = {
             # Product title
             'product_title': product_title,
+            # Product link
+            'product_link': product_url,
             # Product model
             'product_model': product_model,
             # Product warranty
