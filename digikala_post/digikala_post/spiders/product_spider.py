@@ -14,6 +14,9 @@ class QuoteSpider(scrapy.Spider):
         # Product title
         product_title = str(
             page.css("h1.c-product__title::text").get()).strip()
+        # Product model
+        product_model = str(
+            page.css("span.c-product__title-en::text").get()).strip()
         # Product overview
         product_overview = str(page.css(
             "section.c-content-expert__summary .c-mask__text::text").get()).strip()
@@ -50,7 +53,7 @@ class QuoteSpider(scrapy.Spider):
         product = {
             # Product title
             'product_title': product_title,
-            'product_model': '',
+            'product_model': product_model,
             # Product overview
             'product_overview': product_overview,
             # Product general specifications
