@@ -5,7 +5,7 @@ import json
 class QuoteSpider(scrapy.Spider):
     name = "product"
     start_urls = [
-        "https://www.digikala.com/product/dkp-777295/%D8%AF%D9%88%D8%B1%D8%A8%DB%8C%D9%86-%D8%AF%DB%8C%D8%AC%DB%8C%D8%AA%D8%A7%D9%84-%DA%A9%D8%A7%D9%86%D9%86-%D9%85%D8%AF%D9%84-eos-4000d-%D8%A8%D9%87-%D9%87%D9%85%D8%B1%D8%A7%D9%87-%D9%84%D9%86%D8%B2-18-55-%D9%85%DB%8C%D9%84%DB%8C-%D9%85%D8%AA%D8%B1-dc-iii"
+        "https://www.digikala.com/product/dkp-541775/%DA%AF%D9%88%D8%B4%DB%8C-%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-%D8%AF%D9%88%D8%B1%D9%88-%D9%85%D8%AF%D9%84-1360-%D8%AF%D9%88-%D8%B3%DB%8C%D9%85-%DA%A9%D8%A7%D8%B1%D8%AA"
     ]
 
     def parse(self, response):
@@ -17,19 +17,43 @@ class QuoteSpider(scrapy.Spider):
         # Product overview
         product_overview = str(page.css(
             "section.c-content-expert__summary .c-mask__text::text").get()).strip()
-        # Product details
-        product_details = list()
+        # Product general details
+        product_general_details = list()
         # Product general information
         for product_general_info in page.css('#params article.c-params__border-bottom section ul li'):
-            print(product_general_info)
-            title = str(product_general_info.css("div.c-params__list-key span::text").get()).strip()
-            info = str(product_general_info.css("div.c-params__list-value span::text").get()).strip()
-            product_details.append({'title': title, 'info': info})
+            # Select info title
+            title = str(product_general_info.css(
+                "div.c-params__list-key span::text").get()).strip()
+            # Select info body
+            info = str(product_general_info.css(
+                "div.c-params__list-value span::text").get()).strip()
+            # Append it to product general details
+            product_general_details.append({'title': title, 'info': info})
+        # Scrap the product details
+        product_details_data = list()
+        for product_details in page.css("div.c-params__collapse--content section"):
+            # Header
+            header = str(product_details.css("h3::text").get()).strip()
+            details_data = list()
+            for details in product_details.css("ul li"):
+                title = str(details.css(
+                    "div.c-params__list-key span::text").get()).strip()
+                info = str(details.css(
+                    "div.c-params__list-value span::text").get()).strip()
+                details_data.append({'title': title, 'info': info})
+            details_box = {
+                'title': header,
+                'details': details_data,
+            }
+            product_details_data.append(details_box)
+
         product = {
-            "product_title": product_title,
-            "product_overview": product_overview,
-            "product_general_specifications": product_details,
-        }
-        with open("ap.txt", 'w', encoding="utf-8") as f:
-            f.write(str(product))
+            # Product title
+            'product_title': product_title,
+            'product_model': '',
+            # Product overview
+            'product_overview': product_overview,
+            # Product general specifications
+            'product_general_specifications': product_general_details,
+            'product_details_box': product_details_data}
         yield product
