@@ -1,21 +1,28 @@
 import scrapy
 import json
+import os
 
 
 class QuoteSpider(scrapy.Spider):
     name = "product"
     start_urls = [
-        "https://www.digikala.com/product/dkp-2264825/%D8%B3%D8%A7%D8%B9%D8%AA-%D9%87%D9%88%D8%B4%D9%85%D9%86%D8%AF-%D9%85%D9%88%D8%AF%DB%8C%D9%88-%D9%85%D8%AF%D9%84-mw01"
+        "https://www.digikala.com/product/dkp-2730955/%D8%AF%D9%88%D8%B1%D8%A8%DB%8C%D9%86-%D8%AF%D9%88-%DA%86%D8%B4%D9%85%DB%8C-%DB%8C%D9%88%D9%86%DB%8C%D9%88-%D9%85%D8%AF%D9%84-10x25"
     ]
 
     def parse(self, response):
-        # Product url
-        product_url = response.request.url
         # Select the hole page
         page = response.css("div.container")
+        # Product url
+        product_url = response.request.url
         # Product title
         product_title = str(
             page.css("h1.c-product__title::text").get()).strip()
+        # Product category
+        product_category = page.css("ul.c-breadcrumb li ::text").getall()
+        product_category = '/'.join(product_category)
+        print("*"*20)
+        print(product_category)
+        print("*"*20)
         # Product model
         product_model = str(
             page.css("span.c-product__title-en::text").get()).strip()
@@ -65,6 +72,8 @@ class QuoteSpider(scrapy.Spider):
             'product_title': product_title,
             # Product link
             'product_link': product_url,
+            # Product category
+            'product_category': product_category,
             # Product model
             'product_model': product_model,
             # Product warranty
@@ -77,4 +86,11 @@ class QuoteSpider(scrapy.Spider):
             'product_general_specifications': product_general_details,
             # Product all specifications
             'product_details_box': product_details_data}
-        yield product
+        # Product save directory
+        base_dir = "D:\\w\\digikala-product-scraper\\"
+        product_dir = base_dir + f"{product_category}\\"
+        # Check the product directory if doesnt exists create it
+        if not os.path.exists(product_dir):
+            os.makedirs(product_dir)
+        with open(f'{product_dir}\{product_model}.json', 'w+', encoding='utf-8') as f:
+            json.dump(product, f, ensure_ascii=False)
