@@ -1,15 +1,16 @@
-from time import sleep
-import scrapy
-from scrapy.http.request import Request
 import json
 
+import scrapy
+from scrapy.http.request import Request
+
+# Define the needed list
 links = list()
 product_links = list()
 
 # Generate the page links
-for i in range(1, 8):
+for i in range(201, 278):
     links.append(
-        f"https://www.digikala.com/search/category-mobile-phone/?has_selling_stock=1&pageno={i}&sortby=4")
+        f"https://www.digikala.com/search/category-mens-apparel/?sortby=4&pageno={i}")
 
 
 class ProductLinkSpider(scrapy.Spider):
@@ -19,12 +20,14 @@ class ProductLinkSpider(scrapy.Spider):
     # Set the HTTP Header
     def start_requests(self):
         headers = {
-            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:48.0) Gecko/20100101 Firefox/48.0'}
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'}
         for url in self.start_urls:
             yield Request(url, headers=headers)
-    counter_page = 1
-    # Handle the received data
 
+    # Page counter
+    counter_page = 1
+
+    # Handle the received data
     def parse(self, response):
         # Grab all the product boxes
         product_boxs = response.css(

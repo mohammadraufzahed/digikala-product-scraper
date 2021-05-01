@@ -1,13 +1,30 @@
-import scrapy
 import json
-import os
+
+import scrapy
+from scrapy.http.request import Request
+
+from .class.Database.Mysql import Mysql
+from .class import config
+
+# Create database connection
+db = Mysql(config.DB_HOST, config.DB_USER, config.DB_PASS, config.DB_NAME)
+product_links = list()
+with open('links.json', 'r', encoding="utf-8") as f:
+    data = json.load(f)
+    for link in data:
+        product_links.append(link['product_link'])
 
 
-class QuoteSpider(scrapy.Spider):
+class ProductSpider(scrapy.Spider):
     name = "product"
-    start_urls = [
-        "https://www.digikala.com/product/dkp-2730955/%D8%AF%D9%88%D8%B1%D8%A8%DB%8C%D9%86-%D8%AF%D9%88-%DA%86%D8%B4%D9%85%DB%8C-%DB%8C%D9%88%D9%86%DB%8C%D9%88-%D9%85%D8%AF%D9%84-10x25"
-    ]
+    start_urls = product_links
+
+    # Set the HTPP Header
+    def start_requests(self):
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'}
+        for url in self.start_urls:
+            yield Request(url, headers=headers)
 
     def parse(self, response):
         # Select the hole page
@@ -20,9 +37,6 @@ class QuoteSpider(scrapy.Spider):
         # Product category
         product_category = page.css("ul.c-breadcrumb li ::text").getall()
         product_category = '/'.join(product_category)
-        print("*"*20)
-        print(product_category)
-        print("*"*20)
         # Product model
         product_model = str(
             page.css("span.c-product__title-en::text").get()).strip()
@@ -54,43 +68,27 @@ class QuoteSpider(scrapy.Spider):
         for product_details in page.css("div.c-params__collapse--content section"):
             # Header
             header = str(product_details.css("h3::text").get()).strip()
+            # Details list
             details_data = list()
+            # Scrap the details
             for details in product_details.css("ul li"):
+                # detail title
                 title = str(details.css(
                     "div.c-params__list-key span::text").get()).strip()
+                # Detail info
                 info = str(details.css(
                     "div.c-params__list-value span::text").get()).strip()
+                # Append the detail to details list
                 details_data.append({'title': title, 'info': info})
             details_box = {
                 'title': header,
                 'details': details_data,
             }
+            # Append the data to the list
             product_details_data.append(details_box)
-
-        product = {
-            # Product title
-            'product_title': product_title,
-            # Product link
-            'product_link': product_url,
-            # Product category
-            'product_category': product_category,
-            # Product model
-            'product_model': product_model,
-            # Product warranty
-            'product_warranty': product_warranty,
-            # Product colors
-            'product_colors': product_colors,
-            # Product overview
-            'product_overview': product_overview,
-            # Product general specifications
-            'product_general_specifications': product_general_details,
-            # Product all specifications
-            'product_details_box': product_details_data}
-        # Product save directory
-        base_dir = "D:\\w\\digikala-product-scraper\\"
-        product_dir = base_dir + f"{product_category}\\"
-        # Check the product directory if doesnt exists create it
-        if not os.path.exists(product_dir):
-            os.makedirs(product_dir)
-        with open(f'{product_dir}\{product_model}.json', 'w+', encoding='utf-8') as f:
-            json.dump(product, f, ensure_ascii=False)
+        # Prepare the query to commit to database
+        sql = f'''INSERT INTO `digikala_products`(`product_title`, `product_link`, `product_category`, `product_model`, `product_warranty`, `product_colors`, `product_overview`, `product_general_specifications`, `product_details_box`)
+         VALUES 
+         ("{product_title}","{product_url}","{product_category}","{product_model}","{product_warranty}","{product_colors}","{product_overview}","{product_general_details}","{product_details_data}")'''
+        db.query(sql)
+        db.commit()

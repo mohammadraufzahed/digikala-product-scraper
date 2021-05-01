@@ -6,8 +6,3 @@ A digikala product scraper
 
 Python: 3.9.4 <br>
 Scrapy: 2.5.0
-
-# Todo
-
-TODO: Connect the spider to database
-TODO: Add logger
