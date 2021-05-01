@@ -7,9 +7,9 @@ from scrapy.http.request import Request
 base_link = 'https://www.digikala.com/search/category-mens-apparel/'
 links = list()
 product_links = list()
-
+page_range = range(201, 278)
 # Generate the page links
-for i in range(201, 278):
+for i in page_range:
     links.append(
         base_link + f"?sortby=4&pageno={i}")
 
