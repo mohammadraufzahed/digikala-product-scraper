@@ -4,7 +4,7 @@ import scrapy
 from scrapy.http.request import Request
 
 # Define the needed list
-base_link = 'https://www.digikala.com/search/category-mens-apparel/'
+base_link = 'https://www.digikala.com/search/category-office-machines/?has_selling_stock=1&'
 links = list()
 product_links = list()
 page_range = range(201, 278)

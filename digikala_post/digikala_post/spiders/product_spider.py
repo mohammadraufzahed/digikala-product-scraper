@@ -3,11 +3,10 @@ import json
 import scrapy
 from scrapy.http.request import Request
 
-from .class.Database.Mysql import Mysql
-from .class import config
+from .Database.Mysql import Mysql
 
 # Create database connection
-db = Mysql(config.DB_HOST, config.DB_USER, config.DB_PASS, config.DB_NAME)
+db = Mysql()
 product_links = list()
 with open('links.json', 'r', encoding="utf-8") as f:
     data = json.load(f)
