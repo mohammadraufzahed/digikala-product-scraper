@@ -4,13 +4,14 @@ import scrapy
 from scrapy.http.request import Request
 
 # Define the needed list
+base_link = 'https://www.digikala.com/search/category-mens-apparel/'
 links = list()
 product_links = list()
 
 # Generate the page links
 for i in range(201, 278):
     links.append(
-        f"https://www.digikala.com/search/category-mens-apparel/?sortby=4&pageno={i}")
+        base_link + f"?sortby=4&pageno={i}")
 
 
 class ProductLinkSpider(scrapy.Spider):
