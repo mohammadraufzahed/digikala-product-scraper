@@ -1,13 +1,12 @@
 import json
-
 import scrapy
 from scrapy.http.request import Request
-
+from .config import category
 # Define the needed list
-base_link = 'https://www.digikala.com/search/category-office-machines/?has_selling_stock=1&'
+base_link = category.CATEGORY_LINK
 links = list()
 product_links = list()
-page_range = range(201, 278)
+page_range = range(category.PAGES_NUMBER[0], category.PAGES_NUMBER[1])
 # Generate the page links
 for i in page_range:
     links.append(
