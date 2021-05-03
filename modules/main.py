@@ -5,7 +5,8 @@ import os
 class Main():
     # Get the category link from user
     def get_category_link(self):
-        self.__category_link = input("Please enter the category link: ")
+        self.__category_link = input(
+            "Please enter the category link(https://www.digikala.com/search/category-mobile/): ")
 
     # Generate the pages to scrap
     def get_page_numbers(self):
