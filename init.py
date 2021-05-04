@@ -22,5 +22,6 @@ with open(os.getcwd() + '/digikala_post/digikala_post/spiders/config/config.py',
     f.write(data)
     os.system(
         f'autopep8 -i "{os.getcwd()}/digikala_post/digikala_post/spiders/config/config.py" ')
+# Create the links.json
 with open(os.getcwd() + '/digikala_post/digikala_post/links.json', 'w+') as f:
     f.write('[]')
