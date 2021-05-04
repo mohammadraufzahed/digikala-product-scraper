@@ -1,10 +1,11 @@
 import os
 from colorama.ansi import Fore
+from stdiomask import getpass
 
 # Collect the data
 DB_HOST = str(input("Database Host: "))
 DB_USER = str(input("Database Username: "))
-DB_PASS = str(input("Database Password: "))
+DB_PASS = str(getpass(prompt="Database Password: "))
 DB_NAME = str(input("Database Name: "))
 
 # Create template
@@ -21,3 +22,5 @@ with open(os.getcwd() + '/digikala_post/digikala_post/spiders/config/config.py',
     f.write(data)
     os.system(
         f'autopep8 -i "{os.getcwd()}/digikala_post/digikala_post/spiders/config/config.py" ')
+with open(os.getcwd() + '/digikala_post/digikala_post/links.json', 'w+') as f:
+    f.write('[]')
