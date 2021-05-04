@@ -1,11 +1,9 @@
 # Digikala Spider
 Digikala spider is a simple spider for extract the products info from digikala.
 ## About
-___
 Digikala spider created to help us to create database with Digikala products.
 
 ## Requirements
-___
 * Python: 3.9.4+ <br>
 * Scrapy: 2.5.0
 * autopep8: 1.5.6
@@ -13,7 +11,6 @@ ___
 * mysql-connector-python: 8.0.24
 * colorama: 0.4.4
 ## Setup
-___
 First we must install the requirements:
 ```bash
 $ pip install -r requirements.txt
@@ -28,7 +25,6 @@ $ sudo mysql -u USERNAME -p DATABASE_NAME < db.sql
 ```
 now you can use the program.
 ## Usage
-___
 ```bash
 $ python main.py
 Please enter the category link(https://www.digikala.com/search/category-mobile/): https://www.digikala.com/search/category-mobile/
