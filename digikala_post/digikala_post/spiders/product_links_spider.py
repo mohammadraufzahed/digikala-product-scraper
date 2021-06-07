@@ -34,7 +34,8 @@ class ProductLinkSpider(scrapy.Spider):
             'ul.c-listing__items li div.c-product-box')
         # Extract the all product links
         for product_box in product_boxs:
-            product_url = product_box.css("a::attr(href)").get()
+            product_url = product_box.css(
+                "a:nth-child(4)::attr(href)").get()
             product_url = f'https://www.digikala.com{product_url}'
             page = self.counter_page
             # Append the product link object to list
