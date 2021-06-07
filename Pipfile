@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+autopep8 = "==1.5.6"
+pylint = "==2.7.4"
+mysql-connector-python = "==8.0.24"
+colorama = "==0.4.4"
+stdiomask = "==0.0.6"
+Scrapy = "==2.5.0"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
