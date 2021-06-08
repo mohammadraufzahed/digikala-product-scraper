@@ -1,23 +1,30 @@
+
+from .config import category
 import json
 import scrapy
 from scrapy.http.request import Request
-from .config import category
-# Define the needed list
-base_link = category.CATEGORY_LINK
-links = list()
-product_links = list()
-page_range = range(category.PAGES_NUMBER[0], category.PAGES_NUMBER[1])
-# Generate the page links
-for i in page_range:
-    links.append(
-        base_link + f"?sortby=4&pageno={i}")
+from scrapy.crawler import CrawlerProcess
 
 
 class ProductLinkSpider(scrapy.Spider):
     name = 'product_link'
-    start_urls = links
+    custom_settings = {
+        'ROBOTSTXT_OBEY': 'False',
+        'FEED_EXPORT_ENCODING': 'utf-8'
+    }
 
+    def __init__(self):
+        # Define the needed list
+        base_link = category.CATEGORY_LINK
+        self.start_urls = list()
+        self.product_links = list()
+        page_range = range(category.PAGES_NUMBER[0], category.PAGES_NUMBER[1])
+        # Generate the page links
+        for i in page_range:
+            self.start_urls.append(
+                base_link + f"?sortby=4&pageno={i}")
     # Set the HTTP Header
+
     def start_requests(self):
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'}
@@ -39,11 +46,11 @@ class ProductLinkSpider(scrapy.Spider):
             product_url = f'https://www.digikala.com{product_url}'
             page = self.counter_page
             # Append the product link object to list
-            product_links.append({
+            self.product_links.append({
                 'product_link': product_url,
                 'page': page
             })
         self.counter_page += 1
         # Export the all links
         with open('links.json', 'w+', encoding='utf8') as f:
-            json.dump(product_links, f, ensure_ascii=False)
+            json.dump(self.product_links, f, ensure_ascii=False)

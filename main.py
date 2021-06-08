@@ -9,3 +9,4 @@ if __name__ == '__main__':
     main.get_page_numbers()
     # Start the spiders
     main.startSpiders()
+    print("Press Ctrl+C to close the programmer")

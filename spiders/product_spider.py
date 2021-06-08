@@ -1,25 +1,30 @@
 import json
-
 import scrapy
 from scrapy.http.request import Request
-
 from .Database.Mysql import Mysql
 from .config import config
 
-# Create database connection
-db = Mysql(config.DB_HOST, config.DB_USER, config.DB_PASS, config.DB_NAME)
-product_links = list()
-with open('links.json', 'r', encoding="utf-8") as f:
-    data = json.load(f)
-    for link in data:
-        product_links.append(link['product_link'])
-
 
 class ProductSpider(scrapy.Spider):
-    name = "product"
-    start_urls = product_links
 
-    # Set the HTPP Header
+    name = "product"
+    start_urls = list()
+    custom_settings = {
+        'ROBOTSTXT_OBEY': 'False',
+        'FEED_EXPORT_ENCODING': 'utf-8'
+    }
+
+    def __init__(self):
+        # Create database connection
+        self.db = Mysql(config.DB_HOST, config.DB_USER,
+                        config.DB_PASS, config.DB_NAME)
+        with open('links.json', 'r', encoding="utf-8") as f:
+            data = json.load(f)
+            for link in data:
+                self.start_urls.append(link['product_link'])
+            f.close()
+   # Set the HTPP Header
+
     def start_requests(self):
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'}
@@ -90,5 +95,5 @@ class ProductSpider(scrapy.Spider):
         sql = f'''INSERT INTO `digikala_products`(`product_title`, `product_link`, `product_category`, `product_model`, `product_warranty`, `product_colors`, `product_overview`, `product_general_specifications`, `product_details_box`)
          VALUES 
          ("{product_title}","{product_url}","{product_category}","{product_model}","{product_warranty}","{product_colors}","{product_overview}","{product_general_details}","{product_details_data}")'''
-        db.query(sql)
-        db.commit()
+        self.db.query(sql)
+        self.db.commit()

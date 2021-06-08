@@ -1,0 +1,1 @@
+from .digikala_post.digikala_post.spiders.product_links_spider import ProductLinkSpider

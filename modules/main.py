@@ -1,4 +1,6 @@
-from digikala_post.digikala_post.spiders.config import category
+from spiders.product_spider import ProductSpider
+from scrapy.crawler import CrawlerProcess
+from spiders.product_links_spider import ProductLinkSpider
 import os
 
 
@@ -40,16 +42,21 @@ class Main():
         CATEGORY_LINK = str('{category_link}')
         PAGES_NUMBER = list({page_number})
         '''
-        with open(os.getcwd() + '/digikala_post/digikala_post/spiders/config/category.py', 'w', encoding='utf8') as f:
+        with open(os.getcwd() + '/spiders/config/category.py', 'w', encoding='utf8') as f:
             f.flush()
             f.write(data)
         os.system(
-            f'autopep8 -i "{os.getcwd()}/digikala_post/digikala_post/spiders/config/category.py" ')
+            f'autopep8 -i "{os.getcwd()}/spiders/config/category.py" ')
 
     # Run the spiders
     def startSpiders(self):
         for numbers in self.__page_numbers:
             self.saveData(category_link=self.__category_link,
                           page_number=numbers)
-            os.system(
-                'cd digikala_post/digikala_post/ && scrapy crawl product_link && scrapy crawl product')
+            # os.system(
+            #     'cd digikala_post/digikala_post/ && scrapy crawl product_link && scrapy crawl product')
+            process = CrawlerProcess()
+            process.crawl(ProductLinkSpider)
+            process.crawl(ProductSpider)
+            process.start(stop_after_crawl=False)
+            process.stop()

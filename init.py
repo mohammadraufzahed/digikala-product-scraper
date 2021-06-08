@@ -17,13 +17,13 @@ DB_NAME = str('{DB_NAME}')
 '''
 
 # Write the template to file
-with open(os.getcwd() + '/digikala_post/digikala_post/spiders/config/config.py', 'w+', encoding='utf8') as f:
+with open(os.getcwd() + '/spiders/config/config.py', 'w+', encoding='utf8') as f:
     f.flush()
     f.write(data)
     os.system(
-        f'autopep8 -i "{os.getcwd()}/digikala_post/digikala_post/spiders/config/config.py" ')
+        f'autopep8 -i "{os.getcwd()}/spiders/config/config.py" ')
     f.close()
 # Create the links.json
-with open(os.getcwd() + '/digikala_post/digikala_post/links.json', 'w+') as f:
+with open(os.getcwd() + '/links.json', 'w+') as f:
     f.write('[]')
     f.close()
