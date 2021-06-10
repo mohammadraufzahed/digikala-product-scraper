@@ -3,7 +3,7 @@ from colorama import Fore
 
 
 class Mysql:
-    def __init__(self, host, user, password, name):
+    def __init__(self, host, user, password, name=''):
         self.__host = host
         self.__user = user
         self.__password = password
@@ -26,3 +26,6 @@ class Mysql:
 
     def commit(self):
         self.__connection.commit()
+
+    def __del__(self):
+        self.__connection.close()

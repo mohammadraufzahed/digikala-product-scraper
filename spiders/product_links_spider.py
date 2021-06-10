@@ -1,38 +1,39 @@
-
-from .config import category
-import json
 import scrapy
 from scrapy.http.request import Request
-from scrapy.crawler import CrawlerProcess
+from time import sleep
 
 
 class ProductLinkSpider(scrapy.Spider):
     name = 'product_link'
+    # Path that this library uses to store list of proxies
+    ROTATING_PROXY_LIST_PATH = 'prox.txt'
+    NUMBER_OF_PROXIES_TO_FETCH = 50  # Controls how many proxies to use
     custom_settings = {
         'ROBOTSTXT_OBEY': 'False',
-        'FEED_EXPORT_ENCODING': 'utf-8'
+        'FEED_EXPORT_ENCODING': 'utf-8',
+        'DOWNLOADER_MIDDLEWARES': {
+            'rotating_free_proxies.middlewares.RotatingProxyMiddleware': 610,
+            'rotating_free_proxies.middlewares.BanDetectionMiddleware': 620,
+        }
     }
 
-    def __init__(self):
-        # Define the needed list
-        base_link = category.CATEGORY_LINK
-        self.start_urls = list()
-        self.product_links = list()
-        page_range = range(category.PAGES_NUMBER[0], category.PAGES_NUMBER[1])
-        # Generate the page links
-        for i in page_range:
-            self.start_urls.append(
-                base_link + f"?sortby=4&pageno={i}")
-    # Set the HTTP Header
+    def __init__(self, **kwargs):
+        # Page counter
+        self.counter_page = 1
+        self.page_range = kwargs.pop('page_range', [])
+        self.category_url = kwargs.pop('category_url', [])
 
+    # Set the HTTP Header
     def start_requests(self):
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'}
-        for url in self.start_urls:
-            yield Request(url, headers=headers)
-
-    # Page counter
-    counter_page = 1
+        for ranges in self.page_range:
+            urls = (f"{self.category_url}?sortby=4&pageno={x}" for x in range(
+                ranges[0], ranges[1] + 1))
+            for url in urls:
+                yield Request(url, headers=headers)
+            print("Sleeping for 1 minute")
+            sleep(60)
 
     # Handle the received data
     def parse(self, response):
@@ -45,12 +46,9 @@ class ProductLinkSpider(scrapy.Spider):
                 "a:nth-child(4)::attr(href)").get()
             product_url = f'https://www.digikala.com{product_url}'
             page = self.counter_page
-            # Append the product link object to list
-            self.product_links.append({
-                'product_link': product_url,
-                'page': page
-            })
+            if "None" not in product_url:
+                # Append the product link object to list
+                yield {
+                    'product_link': product_url
+                }
         self.counter_page += 1
-        # Export the all links
-        with open('links.json', 'w+', encoding='utf8') as f:
-            json.dump(self.product_links, f, ensure_ascii=False)

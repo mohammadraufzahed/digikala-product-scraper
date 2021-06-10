@@ -1,7 +1,8 @@
-from spiders.product_spider import ProductSpider
-from scrapy.crawler import CrawlerProcess
-from spiders.product_links_spider import ProductLinkSpider
 import os
+from scrapy.crawler import CrawlerProcess
+from scrapy.utils.log import configure_logging
+from spiders.product_links_spider import ProductLinkSpider
+from spiders.product_spider import ProductSpider
 
 
 class Main():
@@ -37,26 +38,28 @@ class Main():
                     [page_numbers_list[last_index], number + 1])
 
     # Save the result data in category file for spiders
-    def saveData(self, category_link, page_number):
+    def saveData(self: object, category_link: str, page_number: list):
         data = f'''
-        CATEGORY_LINK = str('{category_link}')
-        PAGES_NUMBER = list({page_number})
+CATEGORY_LINK = str('{category_link}')
+PAGES_NUMBER = list({page_number})
         '''
         with open(os.getcwd() + '/spiders/config/category.py', 'w', encoding='utf8') as f:
             f.flush()
             f.write(data)
-        os.system(
-            f'autopep8 -i "{os.getcwd()}/spiders/config/category.py" ')
+            f.close()
 
     # Run the spiders
-    def startSpiders(self):
-        for numbers in self.__page_numbers:
-            self.saveData(category_link=self.__category_link,
-                          page_number=numbers)
-            # os.system(
-            #     'cd digikala_post/digikala_post/ && scrapy crawl product_link && scrapy crawl product')
-            process = CrawlerProcess()
-            process.crawl(ProductLinkSpider)
-            process.crawl(ProductSpider)
-            process.start(stop_after_crawl=False)
-            process.stop()
+    def startProductUrlSpider(self):
+        with open('links.jl', "w+", encoding='utf8') as f:
+            f.flush()
+            f.close()
+
+        configure_logging()
+        process = CrawlerProcess(settings={
+            'FEEDS': {
+                'links.jl': {'format': 'jsonlines'},
+            }
+        })
+        process.crawl(ProductLinkSpider, page_range=self.__page_numbers,
+                      category_url=self.__category_link)
+        process.start()
