@@ -1,18 +1,26 @@
+"""
+Contains a class to interact with ProductLinkSpider
+"""
 import os
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.log import configure_logging
 from spiders.product_links_spider import ProductLinkSpider
-from spiders.product_spider import ProductSpider
 
 
-class Main():
+class ProductLink():
     # Get the category link from user
     def get_category_link(self):
+        """
+        Get the category link for ProductLinkSpider
+        """
         self.__category_link = input(
             "Please enter the category link(https://www.digikala.com/search/category-mobile/): ")
 
     # Generate the pages to scrap
     def get_page_numbers(self):
+        """
+        Get the page numbers and convert them to the list for ProductLinkSpider
+        """
         # Save the recieved number from user
         page_number = int(input("How many page this category have? "))
         # Initial the numbers list
@@ -50,6 +58,9 @@ PAGES_NUMBER = list({page_number})
 
     # Run the spiders
     def startProductUrlSpider(self):
+        """
+        Start the ProductLinkSpider
+        """
         with open('links.jl', "w+", encoding='utf8') as f:
             f.flush()
             f.close()

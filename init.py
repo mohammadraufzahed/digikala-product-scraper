@@ -1,5 +1,7 @@
+"""
+Contain a function to initiate the required files and database
+"""
 import os
-from colorama.ansi import Fore
 from stdiomask import getpass
 from spiders.Database.Mysql import Mysql
 

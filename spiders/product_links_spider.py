@@ -1,3 +1,6 @@
+"""
+ProductLinksSpider
+"""
 import scrapy
 from scrapy.http.request import Request
 from time import sleep

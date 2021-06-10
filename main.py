@@ -1,7 +1,8 @@
+"""
+Main script
+"""
 import argparse
-import json
-from twisted.internet import reactor
-from modules.main import Main
+from modules.productLink import ProductLink
 from init import init
 
 if __name__ == '__main__':
@@ -13,13 +14,15 @@ if __name__ == '__main__':
 
     args = arg_parse.parse_args()
     # Create instans
-    main = Main()
     if args.init:
         init()
     elif args.scrap == 'links':
+        productLink = ProductLink()
         # Get category page link
-        main.get_category_link()
+        productLink.get_category_link()
         # Get page numbers
-        main.get_page_numbers()
-        # Start the spiders
-        main.startProductUrlSpider()
+        productLink.get_page_numbers()
+        # Start the Product Url Spider
+        productLink.startProductUrlSpider()
+    elif args.scrap == 'products':
+        pass
