@@ -11,6 +11,7 @@ colorama = "==0.4.4"
 stdiomask = "==0.0.6"
 Scrapy = "==2.5.0"
 rotating-free-proxies = "*"
+jsonlines = "*"
 
 [dev-packages]
 
