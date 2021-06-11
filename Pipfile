@@ -10,8 +10,8 @@ mysql-connector-python = "==8.0.24"
 colorama = "==0.4.4"
 stdiomask = "==0.0.6"
 Scrapy = "==2.5.0"
-rotating-free-proxies = "*"
-jsonlines = "*"
+rotating-free-proxies = "==0.1.2"
+jsonlines = "==2.0.0"
 
 [dev-packages]
 
