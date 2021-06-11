@@ -1,4 +1,5 @@
 import json
+import jsonlines
 import scrapy
 from scrapy.http.request import Request
 from .Database.Mysql import Mysql
@@ -18,18 +19,14 @@ class ProductSpider(scrapy.Spider):
         # Create database connection
         self.db = Mysql(config.DB_HOST, config.DB_USER,
                         config.DB_PASS, config.DB_NAME)
-        with open('links.json', 'r', encoding="utf-8") as f:
-            data = json.load(f)
-            for link in data:
-                self.start_urls.append(link['product_link'])
-            f.close()
-   # Set the HTPP Header
 
+   # Set the HTPP Header
     def start_requests(self):
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'}
-        for url in self.start_urls:
-            yield Request(url, headers=headers)
+        with jsonlines.open('links.jl') as jl:
+            for link in jl:
+                yield Request(link["product_link"], headers=headers)
 
     def parse(self, response):
         # Select the hole page
