@@ -8,7 +8,11 @@ from spiders.product_links_spider import ProductLinkSpider
 
 
 class ProductLink():
+    """
+    A class to interact with ProductLink Spider
+    """
     # Get the category link from user
+
     def get_category_link(self):
         """
         Get the category link for ProductLinkSpider
