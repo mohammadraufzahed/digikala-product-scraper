@@ -3,6 +3,10 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,visualstudiocode,pycharm+all,linux,windows,macos,vim,emacs
 
 config.py
+main.build
+main.build/**
+main.dist
+main.dist/**
 ### Emacs ###
 # -*- mode: gitignore; -*-
 *~
