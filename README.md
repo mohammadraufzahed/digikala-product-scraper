@@ -1,33 +1,71 @@
 # Digikala Spider
+
 Digikala spider is a simple spider for extract the products info from digikala.
+
 ## About
+
 Digikala spider created to help us to create database with Digikala products.
 
 ## Requirements
-* Python: 3.9.4+ <br>
-* Scrapy: 2.5.0
-* autopep8: 1.5.6
-* pylint: 2.7.4
-* mysql-connector-python: 8.0.24
-* colorama: 0.4.4
+
+- Python: 3.9.4+
+- Scrapy: 2.5.0
+- autopep8: 1.5.6
+- pylint: 2.7.4
+- mysql-connector-python: 8.0.24
+- colorama: 0.4.4
+- stdiomask: 0.0.6
+- rotating-free-proxies: 0.1.2
+- jsonlines: 2.0.0
+
 ## Setup
-First we must install the requirements:
+
+First, we must install the pipenv to manage our packages:
+
 ```bash
-$ pip install -r requirements.txt
+$ pip install -U pipenv --user
 ```
-after this you must give your database information to the app buy running init script:
+
+after this, we must install our dependencies:
+
 ```bash
-$ python init.py
+$ python -m pipenv install
 ```
-after that you must import the sql tables to your database:
+
+after that, we must enter into the virtualenv that we created in the previous step:
+
 ```bash
-$ sudo mysql -u USERNAME -p DATABASE_NAME < db.sql
+python -m pipenv shell
 ```
-now you can use the program.
+
+after that, we must initial our database and required files:
+
+```bash
+$ python main.py --init y
+
+Database Host: <Your Mysql server address>
+Database Username: <Your mysql username>
+Database Password: <Your mysql password>
+Database Name: <Your mysql database name>
+```
+
 ## Usage
+
+> :warning: **You must run the links scraper first every time you want to scrap the product links for the productSpider**
+
+<br/>
+
 ```bash
-$ python main.py
-Please enter the category link(https://www.digikala.com/search/category-mobile/): https://www.digikala.com/search/category-mobile/
-How many page this category have?  277
-............
+$ python main.py -h
+
+usage: main.py [-h] [--init INIT] [--scrap {links,products}]
+
+Digikala Scraper
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --init INIT           Initial the database and required files
+  --scrap {links,products}
+                        Scrap the products or links
+
 ```
