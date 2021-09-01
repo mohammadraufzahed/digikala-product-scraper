@@ -2,8 +2,6 @@
 Main script
 """
 import argparse
-from modules.productLink import ProductLink
-from modules.product import Product
 from init import init
 
 if __name__ == '__main__':
@@ -21,6 +19,7 @@ if __name__ == '__main__':
         init()
     # Else if scrap argument was passed with the value of links run the ProductLink Spider
     elif args.scrap == 'links':
+        from modules.productLink import ProductLink
         productLink = ProductLink()
         # Get category page link
         productLink.get_category_link()
@@ -30,6 +29,7 @@ if __name__ == '__main__':
         productLink.startProductUrlSpider()
     # Else if scrap argument was passed with value of products run the Product Spider
     elif args.scrap == 'products':
+        from modules.product import Product
         # Create instants of Product class
         product = Product()
         # Call the ProductSpider
